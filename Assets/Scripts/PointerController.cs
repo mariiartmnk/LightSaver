@@ -1,33 +1,36 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PointerController : MonoBehaviour
 {
-    [Header("Pathing")]
-    [SerializeField] private Transform pointA;
-    [SerializeField] private Transform pointB;
-
     [Header("UI & Game Logic")]
-    [SerializeField] private RectTransform safeZone;
+    [SerializeField] Image lightBulb;
     [SerializeField] private GameObject miniGameWindow;
     [SerializeField] private LightBulbInteraction bulbScript;
-    [SerializeField] private float moveSpeed = 200f; 
+    [SerializeField] private float fillSpeed = 0.5f;
+    [SerializeField] private float safeZone = 0.05f;
 
-    private RectTransform pointerTransform;
-    private Vector3 targetPosition;
     private bool isMoving = false;
     private bool isGameActive = false;
+    private float timer = 0f;
 
     public bool IsGameActive
     {
         get{return isGameActive;}
-        set{isGameActive = value;}
+        set
+        {
+            isGameActive = value;
+            if (isGameActive)
+            {
+                timer = 1f;
+                lightBulb.fillAmount = 1f;
+            }
+        }
     }
 
     void Start()
     {
-        pointerTransform = GetComponent<RectTransform>();
-        pointerTransform.position = pointA.position;
-        targetPosition = pointB.position;
+        if(lightBulb != null) lightBulb.fillAmount = 1f;
     }
 
     void Update()
@@ -48,24 +51,20 @@ public class PointerController : MonoBehaviour
 
         if (isMoving)
         {
-            MovePointer();
+            MoveFill();
         }
     }
 
-    private void MovePointer()
+    private void MoveFill()
     {
-        pointerTransform.position = Vector3.MoveTowards(pointerTransform.position, targetPosition, moveSpeed * Time.deltaTime);
-
-        if (Vector3.Distance(pointerTransform.position, targetPosition) < 0.1f)
-        {
-            targetPosition = (targetPosition == pointA.position) ? pointB.position : pointA.position;
-        }
+        timer += Time.deltaTime * fillSpeed;
+        lightBulb.fillAmount = Mathf.PingPong(timer, 1f);
     }
 
     private void CheckSuccess()
     {
         
-        if (RectTransformUtility.RectangleContainsScreenPoint(safeZone, pointerTransform.position, null))
+        if (lightBulb.fillAmount <= safeZone)
         {
             Debug.Log("Success!");
             bulbScript.MarkAsFixed();
@@ -79,7 +78,7 @@ public class PointerController : MonoBehaviour
         isGameActive = false;
         isMoving = false;
 
-        pointerTransform.position = pointA.position;
+        lightBulb.fillAmount = 1f;
 
         miniGameWindow.SetActive(false);
 

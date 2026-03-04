@@ -77,6 +77,7 @@ public class LightBulbInteraction : MonoBehaviour
         {
             interactTextUI.SetActive(false);
             miniGameWindow.SetActive(true);
+            //GameObject.Find("Player").GetComponent<PlayerMovement>().enabled = false;
             pointerScript.IsGameActive = true;
         }
     }
@@ -86,6 +87,6 @@ public class LightBulbInteraction : MonoBehaviour
         isFixed = true;
         interactTextUI.SetActive(false);
 
-        GetComponent<SpriteRenderer>().color = Color.red;
+        GetComponent<SpriteRenderer>().color = Color.grey;
     }
 }
