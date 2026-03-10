@@ -1,20 +1,20 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.Rendering.Universal;
 
 public class BrightnessManager : MonoBehaviour
 {
     public static BrightnessManager Instance;
 
-    [Header("Darkness Settings")]
-    [SerializeField] private Image darknessOverlay;
-    [UnityEngine.Range(0f, 1f)] [SerializeField] private float maxDarkness = 1.0f;
-
+    [Header("Global Light Settings")]
+    [SerializeField] private Light2D globalLight;
+    [SerializeField] private float startIntensity = 1.0f;
+    [SerializeField] private float darkIntensity = 0.1f;
+    
     [Header("Game Over Settings")]
     [SerializeField] private CanvasGroup gameOverCanvasGroup;
-    [SerializeField] private float fadeDuration = 5.0f;
-    
+    [SerializeField] private float fadeDuration = 2.5f;
 
     private int totalBulbs;
     private int fixedBulbs = 0;
@@ -28,14 +28,15 @@ public class BrightnessManager : MonoBehaviour
     void Start()
     {
         totalBulbs = GameObject.FindObjectsByType<LightBulbInteraction>(FindObjectsInactive.Include, FindObjectsSortMode.None).Length;
-        
+
         if(gameOverCanvasGroup != null) 
         {
             gameOverCanvasGroup.alpha = 0;
             gameOverCanvasGroup.interactable = false;
             gameOverCanvasGroup.blocksRaycasts = false;
         }
-        UpdateBrightness();
+
+        if(globalLight != null) globalLight.intensity = startIntensity;
     }
 
     public void RegisterBulbFixed()
@@ -43,66 +44,61 @@ public class BrightnessManager : MonoBehaviour
         if(isGameOver) return;
 
         fixedBulbs++;
-        UpdateBrightness();
+        UpdateGlobalLight();
 
         if(fixedBulbs >= totalBulbs && totalBulbs > 0)
         {
-            StartCoroutine(UltimateSmoothFade());
+            StartCoroutine(SmoothFade());
         }
     }
 
-    private void UpdateBrightness()
+    private void UpdateGlobalLight()
     {
-        if(darknessOverlay == null || totalBulbs == 0) return;
+        if(totalBulbs == 0 || globalLight == null) return;
 
-        float targetAlpha = ((float)fixedBulbs / totalBulbs) * maxDarkness;
+        float targetAlpha = (float)fixedBulbs / (float)totalBulbs;
 
         if(!isGameOver)
         {
-            Color newColor = darknessOverlay.color;
-            newColor.a = targetAlpha;
-            darknessOverlay.color = newColor;
+            globalLight.intensity = Mathf.Lerp(startIntensity, darkIntensity, targetAlpha);
         }
     }
 
-    private IEnumerator UltimateSmoothFade()
+    private IEnumerator SmoothFade()
     {
         isGameOver = true;
         if(PlayerMovement.Instance != null) PlayerMovement.Instance.canMove = false;
         
         float elapsed = 0;
+        float currentIntencity = globalLight != null ? globalLight.intensity : 0;
 
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
-
-        float startAlpha = darknessOverlay.color.a;
 
         while(elapsed < fadeDuration)
         {
             elapsed += Time.deltaTime;
             float t = elapsed / fadeDuration;
-
             float smoothT = Mathf.SmoothStep(0f, 1f, t);
-            float cinematicT = smoothT * smoothT * (3f - 2f * smoothT); 
 
-            if(darknessOverlay != null)
+            if(globalLight != null)
             {
-                Color c = darknessOverlay.color;
-                c.a = Mathf.Lerp(startAlpha, 1f, cinematicT);
-                darknessOverlay.color = c;
+                globalLight.intensity = Mathf.Lerp(currentIntencity, 0f, smoothT);
             }
 
             if(gameOverCanvasGroup != null)
             {
-                gameOverCanvasGroup.alpha = cinematicT;
+                gameOverCanvasGroup.alpha = smoothT;
             }
             
             yield return null;
         }
 
-        gameOverCanvasGroup.alpha = 1f;
-        gameOverCanvasGroup.interactable = true;
-        gameOverCanvasGroup.blocksRaycasts = true;
+        if(gameOverCanvasGroup != null)
+        {
+            gameOverCanvasGroup.interactable = true;
+            gameOverCanvasGroup.blocksRaycasts = true;
+        }
     }
 
     public void RestartGame()

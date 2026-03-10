@@ -62,6 +62,12 @@ TagManager:
   - name: Decor
     uniqueID: 3060734363
     locked: 0
+  - name: Dark Overlay
+    uniqueID: 1437133725
+    locked: 0
+  - name: Light
+    uniqueID: 3891907787
+    locked: 0
   - name: UI
     uniqueID: 1295181613
     locked: 0

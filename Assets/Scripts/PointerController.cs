@@ -75,16 +75,14 @@ public class PointerController : MonoBehaviour
             Debug.Log("Fail! Wait 30 sec");
             if(PlayerMovement.Instance != null) PlayerMovement.Instance.canMove = true;
             currentBulb.StartCooldown(30f);
+            ParticleSystem ps = currentBulb.GetComponentInChildren<ParticleSystem>();
+            //if(ps != null) ps.Emit(15);
         }
-
+                    
         isGameActive = false;
         isMoving = false;
-
         lightBulb.fillAmount = 1f;
-
         miniGameWindow.SetActive(false);
-
-        
     }
 
     public void AssignBulb(LightBulbInteraction bulb)
