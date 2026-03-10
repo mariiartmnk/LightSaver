@@ -7,6 +7,7 @@ public class PointerController : MonoBehaviour
     [SerializeField] Image lightBulb;
     [SerializeField] private GameObject miniGameWindow;
     [SerializeField] private LightBulbInteraction bulbScript;
+    private LightBulbInteraction currentBulb;
     [SerializeField] private float fillSpeed = 0.5f;
     [SerializeField] private float safeZone = 0.05f;
 
@@ -67,12 +68,13 @@ public class PointerController : MonoBehaviour
         if (lightBulb.fillAmount <= safeZone)
         {
             Debug.Log("Success!");
-            bulbScript.MarkAsFixed();
+            currentBulb.MarkAsFixed();
         }
         else
         {
             Debug.Log("Fail! Wait 30 sec");
-            bulbScript.StartCooldown(30f);
+            if(PlayerMovement.Instance != null) PlayerMovement.Instance.canMove = true;
+            currentBulb.StartCooldown(30f);
         }
 
         isGameActive = false;
@@ -83,5 +85,10 @@ public class PointerController : MonoBehaviour
         miniGameWindow.SetActive(false);
 
         
+    }
+
+    public void AssignBulb(LightBulbInteraction bulb)
+    {
+        currentBulb = bulb;
     }
 }

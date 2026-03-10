@@ -76,9 +76,12 @@ public class LightBulbInteraction : MonoBehaviour
         if(cooldownTimer <= 0 && !isFixed)
         {
             interactTextUI.SetActive(false);
+            pointerScript.AssignBulb(this);
+
             miniGameWindow.SetActive(true);
-            //GameObject.Find("Player").GetComponent<PlayerMovement>().enabled = false;
             pointerScript.IsGameActive = true;
+
+            if(PlayerMovement.Instance != null) PlayerMovement.Instance.canMove = false;
         }
     }
 
@@ -86,7 +89,13 @@ public class LightBulbInteraction : MonoBehaviour
     {
         isFixed = true;
         interactTextUI.SetActive(false);
-
         GetComponent<SpriteRenderer>().color = Color.grey;
+
+        if(PlayerMovement.Instance != null) PlayerMovement.Instance.canMove = true;
+
+        if(BrightnessManager.Instance != null)
+        {
+            BrightnessManager.Instance.RegisterBulbFixed();
+        }
     }
 }
