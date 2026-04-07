@@ -6,6 +6,7 @@ public class MenuController: MonoBehaviour
     public CanvasGroup mainMenu;
     public CanvasGroup optionsMenu;
     public float transitionDuration = .25f;
+    
 
     void Start()
     {

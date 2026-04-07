@@ -61,11 +61,15 @@ public class PlayerMovement : MonoBehaviour
         if (context.performed)
         {
             Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, 1.5f);
-            foreach (var hit in hitColliders)
+            foreach (Collider2D hit in hitColliders)
             {
                 if (hit.TryGetComponent<LightBulbInteraction>(out LightBulbInteraction bulb))
                 {
                     bulb.OpenMiniGame();
+                }
+                else if(hit.TryGetComponent<PetAI>(out PetAI pet))
+                {
+                    pet.TalkToPet();
                 }
             }
         }

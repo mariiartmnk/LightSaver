@@ -20,10 +20,12 @@ public class LightBulbInteraction : MonoBehaviour
 
     [Header("Effects")]
     [SerializeField] private ParticleSystem sparkParticles;
+    [SerializeField] private AudioSource localSparkSource;
 
     private bool canInteract = false;
     private float cooldownTimer = 0f;
     private bool isFixed = false;
+    public bool IsFixed => isFixed;
     void Start()
     {
         interactTextUI.SetActive(false);
@@ -43,6 +45,7 @@ public class LightBulbInteraction : MonoBehaviour
             {
                 var main = sparkParticles.main;
                 main.loop = true;
+                if(!localSparkSource.isPlaying) localSparkSource.Play();
                 sparkParticles.Play();
             }
 
@@ -58,6 +61,7 @@ public class LightBulbInteraction : MonoBehaviour
             if(sparkParticles != null && sparkParticles.isPlaying)
             {
                 sparkParticles.Stop();
+                if(localSparkSource.isPlaying) localSparkSource.Stop();
             }
 
             cooldownTimer = 0;
@@ -108,9 +112,9 @@ public class LightBulbInteraction : MonoBehaviour
 
     public void MarkAsFixed()
     {
+        AudioManager.Instance.PlaySFX(AudioManager.Instance.switchSFX);
         isFixed = true;
         interactTextUI.SetActive(false);
-        GetComponent<SpriteRenderer>().color = Color.grey;
 
         if(PlayerMovement.Instance != null) PlayerMovement.Instance.canMove = true;
 

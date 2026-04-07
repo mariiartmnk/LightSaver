@@ -53,6 +53,9 @@ TagManager:
   - name: Borders
     uniqueID: 3342241451
     locked: 0
+  - name: Pet
+    uniqueID: 1504404093
+    locked: 0
   - name: Player
     uniqueID: 1761586463
     locked: 0

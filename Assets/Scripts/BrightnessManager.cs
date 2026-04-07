@@ -9,7 +9,7 @@ public class BrightnessManager : MonoBehaviour
 
     [Header("Global Light Settings")]
     [SerializeField] private Light2D globalLight;
-    [SerializeField] private float startIntensity = 1.0f;
+    [SerializeField] private float startIntensity = 0.7f;
     [SerializeField] private float darkIntensity = 0.1f;
     
     [Header("Game Over Settings")]
