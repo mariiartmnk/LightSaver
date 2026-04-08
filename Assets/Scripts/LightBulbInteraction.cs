@@ -22,6 +22,9 @@ public class LightBulbInteraction : MonoBehaviour
     [SerializeField] private ParticleSystem sparkParticles;
     [SerializeField] private AudioSource localSparkSource;
 
+    [Header("Navigation")]
+    [SerializeField] public Transform navPoint;
+
     private bool canInteract = false;
     private float cooldownTimer = 0f;
     private bool isFixed = false;

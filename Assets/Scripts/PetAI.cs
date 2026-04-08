@@ -17,6 +17,8 @@ public class PetAI : MonoBehaviour
     [SerializeField] private float hintDelay = 10f;
     [SerializeField] private AudioClip meowSFX;
     private AudioSource localSource;
+    [SerializeField] private Animator animator;
+    private Vector2 lastMoveDirection;
 
     private NavMeshAgent agent;
 
@@ -31,11 +33,12 @@ public class PetAI : MonoBehaviour
 
     void Start()
     {
-        //rb = GetComponent<Rigidbody2D>();
         agent = GetComponent<NavMeshAgent>();
+        rb = GetComponent<Rigidbody2D>();
 
         agent.updateRotation = false;
         agent.updateUpAxis = false;
+        agent.updatePosition = false;
 
         agent.speed = moveSpeed;
 
@@ -64,26 +67,26 @@ public class PetAI : MonoBehaviour
     void Update()
     {
         HandleInteractionUI();
+        UpdateAnimation();
 
-        if(!hasTalkedToPlayer) return;
-
-        if(currentState == PetState.Following)
-        {
-            CheckForStruggle();
-        }
-    }
-
-    void FixedUpdate()
-    {
         if(!hasTalkedToPlayer) return;
 
         if(currentState == PetState.Following)
         {
             FollowPlayer();
+            CheckForStruggle();
         }
         else if(currentState == PetState.Guiding)
         {
             GuideToBulb();
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (hasTalkedToPlayer && rb != null && agent != null)
+        {
+            rb.MovePosition(agent.nextPosition);
         }
     }
 
@@ -117,21 +120,9 @@ public class PetAI : MonoBehaviour
 
     private void FollowPlayer()
     {
-        float distance = Vector2.Distance(transform.position, player.position);
-
-        if(distance > followDistance)
-        {
-            /*Vector2 direction = (Vector2)player.position - rb.position;
-            direction.Normalize();
-            rb.MovePosition(rb. position + direction * moveSpeed * Time.fixedDeltaTime);*/
-            agent.isStopped = false;
-            agent.SetDestination(player.position);
-        }
-        else
-        {
-            //rb.linearVelocity = Vector2.zero;
-            agent.isStopped = true;
-        }
+        agent.stoppingDistance = followDistance;
+        agent.SetDestination(player.position);
+        if(agent.isStopped) agent.isStopped = false;
     }
 
     private void CheckForStruggle()
@@ -183,7 +174,7 @@ public class PetAI : MonoBehaviour
 
         agent.isStopped = false;
         agent.stoppingDistance = 0.5f;
-        agent.SetDestination(targetBulb.transform.position);
+        agent.SetDestination(targetBulb.navPoint != null ? targetBulb.navPoint.position : targetBulb.transform.position);
 
         /*float distanceToBulb = Vector2.Distance(transform. position, targetBulb.transform.position);
 
@@ -197,5 +188,27 @@ public class PetAI : MonoBehaviour
         {
             rb.linearVelocity = Vector2.zero;
         }*/
+    }
+
+    private void UpdateAnimation()
+    {
+        if(animator == null) return;
+
+        Vector2 velocity = agent.velocity;
+        bool isMoving = velocity.magnitude > 0.1f;
+
+        animator.SetBool("isWalking", isMoving);
+
+        if (isMoving)
+        {
+            lastMoveDirection = velocity.normalized;
+            animator.SetFloat("InputX", lastMoveDirection.x);
+            animator.SetFloat("InputY", lastMoveDirection.y);
+        }
+        else
+        {
+            animator.SetFloat("InputX", lastMoveDirection.x);
+            animator.SetFloat("InputY", lastMoveDirection.y);
+        }
     }
 }
