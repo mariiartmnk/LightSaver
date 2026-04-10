@@ -4,7 +4,7 @@ using UnityEngine.Rendering.Universal;
 using System.Collections;
 using System;
 
-public class LightBulbInteraction : MonoBehaviour
+public class LightBulbInteraction : MonoBehaviour, IInteractable
 {
     [Header("UI References")]
     [SerializeField] private GameObject interactTextUI;
@@ -29,6 +29,7 @@ public class LightBulbInteraction : MonoBehaviour
     private float cooldownTimer = 0f;
     private bool isFixed = false;
     public bool IsFixed => isFixed;
+
     void Start()
     {
         interactTextUI.SetActive(false);
@@ -109,7 +110,7 @@ public class LightBulbInteraction : MonoBehaviour
             miniGameWindow.SetActive(true);
             pointerScript.IsGameActive = true;
 
-            if(PlayerMovement.Instance != null) PlayerMovement.Instance.canMove = false;
+            PauseController.SetPause(true);
         }
     }
 
@@ -119,7 +120,7 @@ public class LightBulbInteraction : MonoBehaviour
         isFixed = true;
         interactTextUI.SetActive(false);
 
-        if(PlayerMovement.Instance != null) PlayerMovement.Instance.canMove = true;
+        PauseController.SetPause(false);
 
         if(bulbLight != null)
         {
@@ -148,5 +149,15 @@ public class LightBulbInteraction : MonoBehaviour
 
         bulbLight.intensity = 0;
         bulbLight.enabled = false;
+    }
+
+    public bool CanInteract()
+    {
+        return !isFixed && cooldownTimer <= 0;
+    }
+    
+    public void Interact()
+    {
+        OpenMiniGame();
     }
 }

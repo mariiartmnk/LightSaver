@@ -56,7 +56,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Interact(InputAction.CallbackContext context)
     {
-        if(!canMove) return;
+        //if(!canMove) return;
         
         if (context.performed)
         {
@@ -70,6 +70,12 @@ public class PlayerMovement : MonoBehaviour
                 else if(hit.TryGetComponent<PetAI>(out PetAI pet))
                 {
                     pet.TalkToPet();
+                }
+                
+                if(hit.TryGetComponent<NPC>(out NPC npc))
+                {
+                    npc.Interact();
+                    return;
                 }
             }
         }

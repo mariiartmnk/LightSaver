@@ -113,8 +113,10 @@ public class PetAI : MonoBehaviour
             hasTalkedToPlayer = true;
             currentState = PetState.Following;
             hintTimer = 0;
-            if(interactUI != null)
+            if(interactUI != null && localSource != null && meowSFX != null)
+                localSource.PlayOneShot(meowSFX);
                 interactUI.SetActive(false);
+                
         }
     }
 
