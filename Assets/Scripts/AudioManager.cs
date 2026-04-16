@@ -8,8 +8,9 @@ public class AudioManager : MonoBehaviour
     [Header ("Audio Sources")]
     public AudioSource musicSource;
     public AudioSource sfxSource;
+    public AudioSource voiceAudioSource;
 
-    [Header("Audio CLips")]
+    [Header("Audio Clips")]
     public AudioClip backgroundMusic;
     public AudioClip sparksSFX;
     public AudioClip switchSFX;
@@ -77,6 +78,16 @@ public class AudioManager : MonoBehaviour
         {
             sfxSource.Stop();
             sfxSource.loop = false;
+        }
+    }
+
+    public void PlayVoice(AudioClip clip, float basePitch)
+    {
+        if (clip != null && voiceAudioSource != null)
+        {
+            // Randomize the pitch slightly around the base pitch
+            voiceAudioSource.pitch = basePitch + Random.Range(-0.1f, 0.1f); 
+            voiceAudioSource.PlayOneShot(clip);
         }
     }
 }

@@ -41,6 +41,8 @@ public class NPC : MonoBehaviour, IInteractable
             movementScript.canMove = false;
         dialogueIndex = 0;
 
+        if(PlayerMovement.Instance != null) PlayerMovement.Instance.canMove = false;
+
         nameText.SetText(dialogueData.npcName);
         dialogueImg.SetActive(true);
         PauseController.SetPause(true);
@@ -74,7 +76,13 @@ public class NPC : MonoBehaviour, IInteractable
         foreach(char letter in dialogueData.dialogueLines[dialogueIndex])
         {
             dialogueText.text += letter;
-            yield return new WaitForSeconds(dialogueData.typingSpeed);
+
+            if (dialogueData.voiceSound != null && AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlayVoice(dialogueData.voiceSound, dialogueData.voicePitch);
+            }
+
+            yield return new WaitForSecondsRealtime(dialogueData.typingSpeed);
         }
 
         isTyping = false;
@@ -95,5 +103,7 @@ public class NPC : MonoBehaviour, IInteractable
         PauseController.SetPause(false);
 
         if(movementScript != null) movementScript.canMove = true;
+
+        if(PlayerMovement.Instance != null) PlayerMovement.Instance.canMove = true;
     }
 }

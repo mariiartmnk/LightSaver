@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a03dc5fced11fed419034bbd7a29c582, type: 3}
+  m_Name: MomDialogue
+  m_EditorClassIdentifier: 
+  npcName: Mom
+  dialogueLines:
+  - Electricity bill was so high last month
+  - I wish we could save some energy this month
+  autoProgressLines: 0100
+  autoProgressDelay: 1.5
+  typingSpeed: 0.05
+  voiceSound: {fileID: 8300000, guid: e85596066be4fe54ea669389735949c9, type: 3}
+  voicePitch: 1
