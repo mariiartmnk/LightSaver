@@ -9,12 +9,13 @@ public class BrightnessManager : MonoBehaviour
 
     [Header("Global Light Settings")]
     [SerializeField] private Light2D globalLight;
-    [SerializeField] private float startIntensity = 0.7f;
-    [SerializeField] private float darkIntensity = 0.1f;
+    [SerializeField] private float startIntensity = 1f;
+    [SerializeField] private float darkIntensity = 0.01f;
     
     [Header("Game Over Settings")]
     [SerializeField] private CanvasGroup gameOverCanvasGroup;
     [SerializeField] private float fadeDuration = 2.5f;
+    
 
     private int totalBulbs;
     private int fixedBulbs = 0;
