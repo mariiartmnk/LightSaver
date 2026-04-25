@@ -52,4 +52,20 @@ public class MenuAudioManager : MonoBehaviour
             menuSound.Play();
         }
     }
+
+    public void SetMusicVolume(float volume)
+    {
+        if(menuSound != null)
+        {
+            menuSound.volume = volume;
+        }
+    }
+
+    public void SetSFXVolume(float volume)
+    {
+        if(menuSFX != null)
+        {
+            menuSFX.volume = volume;
+        }
+    }
 }
