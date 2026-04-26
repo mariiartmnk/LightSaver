@@ -17,8 +17,6 @@ MonoBehaviour:
   - 'To start your energy-saving journey, even small steps can help. '
   - 'Start with switching off all artificial light you dont need. '
   - 'Let''s use more natural light. '
-  - To walk use WASD or Arrow keys.
-  - To interact with lamps, family and cat use F.
   autoProgressLines: 01010101
   autoProgressDelay: 1.5
   typingSpeed: 0.05

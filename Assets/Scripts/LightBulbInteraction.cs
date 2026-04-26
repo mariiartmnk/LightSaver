@@ -110,6 +110,9 @@ public class LightBulbInteraction : MonoBehaviour, IInteractable
             miniGameWindow.SetActive(true);
             pointerScript.IsGameActive = true;
 
+            if(PlayerMovement.Instance != null)
+                PlayerMovement.Instance.canMove = false;
+
             PauseController.SetPause(true);
         }
     }
@@ -119,6 +122,9 @@ public class LightBulbInteraction : MonoBehaviour, IInteractable
         AudioManager.Instance.PlaySFX(AudioManager.Instance.switchSFX);
         isFixed = true;
         interactTextUI.SetActive(false);
+
+        if(PlayerMovement.Instance != null)
+            PlayerMovement.Instance.canMove = true;
 
         PauseController.SetPause(false);
 

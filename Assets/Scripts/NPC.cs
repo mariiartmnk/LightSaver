@@ -11,6 +11,7 @@ public class NPC : MonoBehaviour, IInteractable
     private int dialogueIndex;
     private bool isTyping, isDialogueActive;
     private NPCMovement movementScript;
+    public float interactionDistance = 1.5f;
 
     void Start()
     {

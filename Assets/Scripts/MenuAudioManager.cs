@@ -9,7 +9,7 @@ public class MenuAudioManager : MonoBehaviour
     public AudioSource menuSound;
     public AudioSource menuSFX;
 
-    [Header("Audio CLips")]
+    [Header("Audio Clips")]
     public AudioClip menuMusic;
     public AudioClip buttonsSFX;
 

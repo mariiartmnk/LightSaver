@@ -5,11 +5,13 @@ public class MenuController: MonoBehaviour
 {
     public CanvasGroup mainMenu;
     public CanvasGroup optionsMenu;
+    public CanvasGroup controlsMenu;
     public float transitionDuration = .25f;
     
 
     void Start()
     {
+        Time.timeScale = 1f;
         ShowMainMenuInstant();
     }
 
@@ -23,6 +25,16 @@ public class MenuController: MonoBehaviour
         StartCoroutine(TransitionMenus(optionsMenu, mainMenu));
     }
 
+    public void OpenControls()
+    {
+        StartCoroutine(TransitionMenus(mainMenu, controlsMenu));
+    }
+
+    public void CloseControls()
+    {
+        StartCoroutine(TransitionMenus(controlsMenu, mainMenu));
+    }
+
     void ShowMainMenuInstant()
     {
         mainMenu.alpha = 1;
@@ -33,6 +45,11 @@ public class MenuController: MonoBehaviour
         optionsMenu.interactable = false;
         optionsMenu.blocksRaycasts = false;
         optionsMenu.gameObject.SetActive(false);
+
+        controlsMenu.alpha = 0;
+        controlsMenu.interactable = false;
+        controlsMenu.blocksRaycasts = false;
+        controlsMenu.gameObject.SetActive(false);
     }
 
     IEnumerator TransitionMenus(CanvasGroup currentMenu, CanvasGroup nextMenu)

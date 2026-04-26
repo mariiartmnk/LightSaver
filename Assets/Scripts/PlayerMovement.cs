@@ -56,8 +56,6 @@ public class PlayerMovement : MonoBehaviour
 
     public void Interact(InputAction.CallbackContext context)
     {
-        //if(!canMove) return;
-        
         if (context.performed)
         {
             Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, 1.5f);

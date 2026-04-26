@@ -10,13 +10,16 @@ public class Controls : MonoBehaviour
     public CanvasGroup canvasGroup;
     public TextMeshProUGUI tutorialText;
     public GameObject pressFPrompt;
+    public GameObject controlsPanel;
+    public Button closeButton;
+
+    private bool isShowingControls = false;
+    public bool canFinishTutorial = false;
 
     [Header("Settings")]
     public NPCDialogue tutorialData;
 
     public Image blackBackground;
-
-    private bool canFinish = false;
 
     void Awake()
     {
@@ -66,24 +69,58 @@ public class Controls : MonoBehaviour
         }
 
         pressFPrompt.SetActive(true);
-        canFinish = true;
+        canFinishTutorial = true;
     }
 
     void Update()
     {
-        if(canFinish && Input.GetKeyDown(KeyCode.F))
+        if (canFinishTutorial && !isShowingControls && Input.GetKeyDown(KeyCode.F))
         {
-            StartCoroutine(FadeOutAndStartGame());
+            ShowControlsScreen();
+        }
+    }
+
+    void ShowControlsScreen()
+    {
+        tutorialText.gameObject.SetActive(false);
+
+        if(controlsPanel != null)
+        {
+            controlsPanel.SetActive(true);
+        }
+
+        isShowingControls = true;
+    }
+
+    public void StartGameFromButton()
+    {
+        if (isShowingControls)
+        {
+            isShowingControls = false; 
+            if (gameObject.activeInHierarchy)
+            {
+                StartCoroutine(FadeOutAndStartGame());
+            }
         }
     }
 
     IEnumerator FadeOutAndStartGame()
     {
+        if (controlsPanel != null) 
+        {
+            controlsPanel.SetActive(false);
+        }
+        
+        if (pressFPrompt != null) 
+        {
+            pressFPrompt.SetActive(false);
+        }
+
         float elapsed = 0;
         while(elapsed < 1f)
         {
             elapsed += Time.unscaledDeltaTime;
-            canvasGroup.alpha = Mathf.Lerp(1, 0, elapsed); 
+            canvasGroup.alpha = Mathf.Lerp(1, 0, elapsed);
             blackBackground.color = new Color(0, 0, 0, Mathf.Lerp(1, 0, elapsed));
             yield return null;
         }

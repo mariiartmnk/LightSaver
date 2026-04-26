@@ -21,7 +21,6 @@ public class AudioManager : MonoBehaviour
         if(Instance == null)
         {
             Instance = this;
-            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -50,7 +49,15 @@ public class AudioManager : MonoBehaviour
                 sfxSource.volume = 0.5f;
                 sfxSource.Play();
             }
-            sfxSource.PlayOneShot(clip, 0.05f);
+            sfxSource.PlayOneShot(clip, 1.0f);
+        }
+    }
+
+    public void PlayButtonSFX(AudioClip clip)
+    {
+        if(clip != null && sfxSource != null)
+        {
+            sfxSource.PlayOneShot(clip);
         }
     }
 
@@ -85,9 +92,18 @@ public class AudioManager : MonoBehaviour
     {
         if (clip != null && voiceAudioSource != null)
         {
-            // Randomize the pitch slightly around the base pitch
             voiceAudioSource.pitch = basePitch + Random.Range(-0.1f, 0.1f); 
             voiceAudioSource.PlayOneShot(clip);
         }
+    }
+
+    public void SetMusicVolume(float volume)
+    {
+        if (musicSource != null) musicSource.volume = Mathf.Clamp01(volume);
+    }
+
+    public void SetSFXVolume(float volume)
+    {
+        if (sfxSource != null) sfxSource.volume = Mathf.Clamp01(volume);
     }
 }
